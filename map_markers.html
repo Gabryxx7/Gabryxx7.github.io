@@ -123,8 +123,8 @@ var circles = [];
 $.getJSON('markers.json', function (data) {
 markerJson = data;
 for (index in markerJson.markers) {
-    if(markerJson.devices[index].hasOwnProperty("circle")){
-        var circle = markerJson.devices[index].circle;
+    if(markerJson.markers[index].hasOwnProperty("circle")){
+        var circle = markerJson.markers[index].circle;
         var cir = new Circle();
         cir.pos.x = circle.x;
         cir.pos.y = circle.y;
