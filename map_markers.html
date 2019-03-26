@@ -132,9 +132,7 @@ for (index in markerJson.markers) {
         var cir = new Circle();
         cir.pos.x = circle.x;
         cir.pos.y = circle.y;
-        cir.id = device.deviceNumber;
-        device.circle = cir;
-        cir.device = device;
+        cir.id = markerJson.markers[index].id;
         circles.push(cir);
     }
 }
@@ -280,7 +278,6 @@ function handleMouseUp(e) {
             clickedOrder = inters;
             clickedPrevSelection = circles[i].selected;
             circles[i].selected = true;
-            console.log(getDeviceByNumber(circles[i].id));
         } else {
             circles[i].selected = false;
         }
