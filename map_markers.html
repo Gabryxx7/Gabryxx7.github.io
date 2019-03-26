@@ -109,7 +109,15 @@ function Circle() {
     }
 }
     
-    
+    var defaultInnerSize = 15;
+//var defaultOuterSize = defaultInnerSize * 2;
+var defaultOuterSize = defaultInnerSize * 10;
+var defaultInnerAvailableFill = "#0087ff82";
+var defaultOuterAvailableFill = "#46a7fd70";
+var defaultInnerUnavailableFill = "#808080a6";
+var defaultOuterUnavailableFill = "#adabab63";
+var defaultInnerFill = "#ff460a91";
+var defaultOuterFill = "#f58d048f";
 var circles = [];
     
 $.getJSON('markers.json', function (data) {
