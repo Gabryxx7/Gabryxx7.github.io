@@ -108,6 +108,25 @@ function Circle() {
         }
     }
 }
+    
+    
+var circles = [];
+    
+$.getJSON('markers.json', function (data) {
+markerJson = data;
+for (index in markerJson.markers) {
+    if(markerJson.devices[index].hasOwnProperty("circle")){
+        var circle = markerJson.devices[index].circle;
+        var cir = new Circle();
+        cir.pos.x = circle.x;
+        cir.pos.y = circle.y;
+        cir.id = device.deviceNumber;
+        device.circle = cir;
+        cir.device = device;
+        circles.push(cir);
+    }
+}
+});
 
     
     
@@ -345,7 +364,7 @@ $(function () {
         resizeCanvas();
         //context.drawImage(image,0,0,canvas.width,canvas.height);
     };
-    image.src = "images/background-map.png";
+    image.src = "images/background-map2.png";
 
     initializeCanvas();
 });
