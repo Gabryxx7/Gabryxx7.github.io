@@ -1,0 +1,361 @@
+
+
+<!doctype html>
+
+
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/421-bootstrap.min.css">
+
+
+  <!-- Optional JavaScript -->
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/421-bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/deploy-map.js"></script>
+
+  <title>Map Markers</title>
+</head>
+
+<body>
+
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+      <a class="nav-link active" id="v-pills-dashboard-tab" data-toggle="pill" href="#v-pills-dashboard" role="tab"
+        aria-controls="v-pills-dashboard" aria-selected="true">Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="v-pills-map-tab" data-toggle="pill" href="#v-pills-map" role="tab" aria-controls="v-pills-map"
+        aria-selected="false">Map</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="v-pills-history-tab" data-toggle="pill" href="#v-pills-history" role="tab" aria-controls="v-pills-history"
+        aria-selected="false">History</a>
+    </li>
+  </ul>
+  <div id='actionButtons'>
+    <span><input type="checkbox" class="disable-notif-switch" />Disable Notif.
+    </span>
+    </span>
+    <span><input type="checkbox" class="auto-update-switch" />
+    </span>
+    <span class="input-group" disabled>
+      <input type="text" class="form-control" aria-label="Seconds" disabled>
+      <div class="input-group-append">
+        <span class="input-group-text">s</span>
+      </div>
+    </span>
+    <button type="button" class="btn btn-info update-all-btn">Request Update All</button>
+    <button type="button" class="btn btn-secondary update-settings-all-btn">Update Settings All</button>
+    <button type="button" class="btn btn-danger restart-all-btn" data-toggle="modal" data-target="#confirmRestartAllModal">Restart
+      All</button>
+  </div>
+
+  <div class="tab-content" id="v-pills-tabContent">
+    <div class="tab-pane fade" id="v-pills-map" role="tabpanel" aria-labelledby="v-pills-map-tab">
+      <div id="map-container">
+        <canvas id="canvas" width="500" height="500">your canvas loads here</canvas>
+      </div>
+
+    </div>
+
+    <div class="tab-pane fade" id="v-pills-history" role="tabpanel" aria-labelledby="v-pills-history-tab">
+      <div id="date-range-container">
+        <form id="datePickerForm">
+
+          <div class="form-row align-items-center">
+            <label for="daterangepicker" class="col-form-label">Date Range</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-calendar-alt"></i>
+                </div>
+              </div>
+              <input type="text" name="datetimes" value="01/01/2019 - 10/01/2019" class="form-control" id="daterangepicker">
+              <!-- <small id="daterangepickerHelp" class="form-text text-muted">Select the date range of the data you are
+                      interested in</small> -->
+            </div>
+          </div>
+
+          <div class="form-row align-items-center">
+            <label for="daterangedevice" class="col-form-label">Device</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-mobile-alt"></i>
+                </div>
+              </div>
+              <select multiple class="form-control" id="daterangedevice" name="devices" size="10">
+                <option value="" selected>ALL devices</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row align-items-center">
+            <div class="input-group mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="unzipmerge">
+                    <label class="form-check-label" for="unzipmerge">
+                      Keep original .csv.gz files
+                    </label>
+                  </div>
+              </div>
+          </div>
+
+          <div class="form-row align-items-center">
+            <label for="daterangebeacon" class="col-form-label">Beacon</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-map-marker"></i>
+                </div>
+              </div>
+              <select multiple class="form-control" id="daterangebeacon" name="beacons" size="10">
+                <option value="" selected>ALL beacons</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row align-items-center">
+            <div class="input-group mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkfilenamesonly">
+                    <label class="form-check-label" for="checkfilenamesonly">
+                      Filter filenames only
+                    </label>
+                  </div>
+              </div>
+          </div>
+
+
+          <button type="submit" class="btn btn-primary" style="margin-top: 4%; ">Submit</button>
+        
+        </form>
+          <ul class="list-group" id="exportFileList">
+              <li class='list-group-item d-flex justify-content-between align-items-center'>export_2019-02-04_16_26_22.tar.gz<button type='button' class='btn btn-primary'>Download</button> <a style='display:none;'>exports/export_2019-02-04_16_26_22.tar.gz</a> </li><li class='list-group-item d-flex justify-content-between align-items-center'>export_2019-02-04_16_26_33.csv.gz<button type='button' class='btn btn-primary'>Download</button> <a style='display:none;'>exports/export_2019-02-04_16_26_33.csv.gz</a> </li><li class='list-group-item d-flex justify-content-between align-items-center'>export_2019-02-05_12_18_32.csv.gz<button type='button' class='btn btn-primary'>Download</button> <a style='display:none;'>exports/export_2019-02-05_12_18_32.csv.gz</a> </li><li class='list-group-item d-flex justify-content-between align-items-center'>export_2019-02-08_16_19_58.csv.gz<button type='button' class='btn btn-primary'>Download</button> <a style='display:none;'>exports/export_2019-02-08_16_19_58.csv.gz</a> </li><li class='list-group-item d-flex justify-content-between align-items-center'>export_2019-02-13_10_57_49.csv.gz<button type='button' class='btn btn-primary'>Download</button> <a style='display:none;'>exports/export_2019-02-13_10_57_49.csv.gz</a> </li>          </ul>
+        <div id="dateCsvLoader" style="display: none;"></div>
+      </div>
+    </div>
+
+    <div class="tab-pane fade show active" id="v-pills-dashboard" role="tabpanel" aria-labelledby="v-pills-dashboard-tab">
+      <!-- <h1>Hello, world!</h1> -->
+
+      <div id="mainContainer">
+        <div class="containerBeacons">
+          <span class="beaconList-title-container">
+            <span class="beaconList-title">Beacons</span>
+            <span class="beaconList-counters-container">
+              <span class="beaconList-counter-available">0</span>/
+              <span class="beaconList-counter-total">0</span>
+            </span>
+          </span>
+
+          <table class="table">
+
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>ID</th>
+                <th>RSSI</th>
+                <th>Room</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="beacon_row empty_row">
+                <td colspan="4">No Beacons</td>
+              </tr>
+
+              <tr class="beacon_row template_beacon_row" style="display: none;" beaconid="">
+                <td class="row_number">0</td>
+                <td><i class="fas fa-map-marker"></i></td>
+                <td class="beacon_id">000</td>
+                <td class="beacon_rssi">-90</td>
+                <td class="beacon_room">000</td>
+                <td class="beacon_timestamp">-90</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="container">
+          <div class="deviceContainer-title-container">
+            <div class="totalDeployedContainer">Show Deployed Only: <span><input type="checkbox" class="filter-deployed-switch"
+                  checked /></span>
+              <span class="totalDeployedAvailCounter"> -1 </span>/
+              <span class="totalDeployedCounter"> -1 </span>
+            </div>
+            <div class="deviceContainer-title">
+              Devices
+            </div>
+            <div class="totalDevicesContainer">Show Avail. Only: <span><input type="checkbox" class="filter-available-switch" /></span>
+              <span class="totalDevicesAvailCounter"> -1 </span>/
+              <span class="totalDevicesCounter"> -1 </span>
+            </div>
+          </div>
+          <div class="rowsContainer">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Template -->
+  <div class="col" id="template_col" style="display: none;" deviceId="">
+    <div class="upper-side">
+      <i class="fas fa-mobile-alt"></i>
+      <span class="device_details">
+        <span class="deviceid"> 1 </span>
+        <div class="watchdog">Watchdog: <span class="watchdog_status offline">offline</span>
+        </div>
+      </span>
+    </div>
+    <div class="left-side">
+      <div class="deviceBeacons">
+        <table class="table table-striped">
+          <tbody>
+            <tr class="beacon_row empty_row" style="display: none;">
+              <td colspan="4">None</td>
+            </tr>
+
+            <tr class="beacon_row template_beacon_row" style="display: none;" beaconId="">
+              <td><i class="fas fa-map-marker"></i></td>
+              <td class="beacon_id">000</td>
+              <td class="beacon_rssi">-90</td>
+              <td class="beacon_timestamp">-90</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="right-side">
+      <div class="deviceNoContainer">Device Number: <span class="deviceNo">-1</span></div>
+      <div class="roomContainer" style="display: none;">Room: <span class="room">Rooom</span></div>
+      <div class="lastAvailableContainer">
+        Last contact: <span class="lastAvailable"> - </span>
+        <span class="lastAvailableTimestamp" style="display: none;"></span>
+      </div>
+      <div class="devInfo">
+        <div class="batteryInfo" style="display:none;">
+          <div class="batteryPerc">
+            - %
+          </div>
+          <div class="batteryIcon">
+            <div class="fa-stack fa-1x">
+              <i class="fas fa-battery-empty fa-stack-2x"></i>
+              <i class="fas fa-slash fa-stack-2x" style="display: none;"></i>
+              <span class="fa-layers-text">
+                <span class="batteryFill"></span>
+              </span>
+            </div>
+          </div>
+          <span class="batteryPlugIcon">
+            <span class="fa-stack fa-1x">
+              <i class="fas fa-bolt fa-stack-1x"></i>
+              <i class="fas fa-plug fa-stack-2x"></i>
+              <i class="fas fa-slash fa-stack-2x"></i>
+            </span>
+          </span>
+          <div class="batteryText" style="display:none;">
+            Battery:
+            <span class="batteryPlug">
+              -
+            </span>
+            <span class="batteryPerc">
+              - %
+            </span>
+          </div>
+        </div>
+        <div class="settInfo">
+          Settings:
+          <span class="settVer">
+            v-
+          </span>
+        </div>
+      </div>
+      <div class="unplugged" style="display: none;">
+        Phone Unplugged!
+      </div>
+      <div class="opened" style="display: none;">
+        Box Opened!
+      </div>
+    </div>
+    <div class="bottom-side">
+      <button type="button" class="btn btn-info update-btn"><i class="fas fa-sync-alt"></i></button>
+      <button type="button" class="btn btn-secondary notify-btn" data-toggle="modal" data-target="#notificationModal"><i
+          class="fas fa-bell"></i></button>
+      <button type="button" class="btn btn-success update-sett-btn">
+        <span class="fa-stack fa-1x">
+          <i class="fas fa-sync-alt fa-stack-1x" style="font-size: 0.6em;top: 16%;left: 29%;"></i>
+          <i class="fas fa-cog fa-stack-1x" style="font-size: 1.2em;top: -15%;left: -7%;"></i>
+        </span>
+      </button>
+      <a class="btn btn-primary teamviewer-btn" href="#" target="_blank" role="button" style="display: none;">
+        <span class="fa-stack fa-1x" style="top: -10%;">
+          <i class="fas fa-desktop fa-stack-1x" style="font-size: 1.3em;"></i>
+          <i class="fas fa-exchange-alt fa-stack-1x" style="font-size: 0.6em;top: -6%;left: 0%;"></i>
+        </span>
+      </a>
+      <button type="button" class="btn btn-danger restart-btn" disabled><i class="fas fa-power-off"></i></button>
+    </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="confirmRestartAllModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to restart ALL devices?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Restart All</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <a style="display: none;" id="deviceId" deviceId=""></a>
+          <a style="display: none;" id="deviceNumber" deviceNumber=""></a>
+          <form>
+            <div class="form-group">
+              <label for="recipient-name" class="col-form-label">Title:</label>
+              <input type="text" class="form-control" id="notification-title">
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Content:</label>
+              <textarea class="form-control" id="notification-content"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Notify Device</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
