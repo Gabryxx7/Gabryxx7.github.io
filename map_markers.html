@@ -28,6 +28,89 @@
       </div>
   
   <script>
+    
+function Position(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
+function Circle() {
+    this.pos = new Position(-1, -1);
+    this.innerSize = defaultInnerSize;
+    this.outerSize = defaultOuterSize;
+    this.innerAvailableFill = defaultInnerAvailableFill;
+    this.outerAvailableFill = defaultOuterAvailableFill;
+    this.innerUnavailableFill = defaultInnerUnavailableFill;
+    this.outerUnavailableFill = defaultOuterUnavailableFill;
+    this.innerFill = defaultInnerFill;
+    this.outerFill = defaultOuterFill;
+    this.id = -1;
+    this.selected = false;
+    this.device = null;
+
+    this.draw = function (context) {
+        var outerFill = this.outerFill;
+        var innerFill = this.innerFill;
+        var outerSize = this.outerSize;
+        var innerSize = this.innerSize;
+        if (this.device != undefined && this.device != null) {
+            if (this.device.available) {
+                innerFill = this.innerAvailableFill;
+                outerFill = this.outerAvailableFill;
+            } else {
+                innerFill = this.innerUnavailableFill;
+                outerFill = this.outerUnavailableFill;
+            }
+        }
+
+        if(outerSize != undefined && outerSize != null && outerSize > 0){
+            context.beginPath();
+            context.fillStyle = outerFill;
+            context.arc(this.pos.x, this.pos.y, outerSize, 0, 2 * Math.PI);
+            context.fill();
+            context.closePath();
+        }
+
+        if(outerSize != undefined && innerSize != null && innerSize > 0){
+            context.beginPath();
+            context.fillStyle = innerFill;
+            context.arc(this.pos.x, this.pos.y, innerSize, 0, 2 * Math.PI);
+            context.fill();
+            context.closePath();
+        }
+
+        context.fillStyle = "#000000";
+        context.font = innerSize + "px Arial";
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(this.id, this.pos.x, this.pos.y);
+
+        if (this.selected) {
+            var closeCircleSize = innerSize / 2;
+            context.beginPath();
+            context.fillStyle = "#ff4d13"
+            context.arc(this.pos.x - outerSize + closeCircleSize, this.pos.y - outerSize + closeCircleSize, closeCircleSize, 0, 2 * Math.PI);
+            context.fill();
+            context.closePath();
+            context.fillStyle = "#000000";
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.font = closeCircleSize + "px Arial";
+            context.fillText('X', this.pos.x - (outerSize - closeCircleSize), this.pos.y - (outerSize - closeCircleSize));
+        }
+
+        if (this.device != undefined && this.device != null && this.device.battery != undefined && this.device.battery != null) {
+            if (this.device.battery.status != 0) {
+                var boltSize = innerSize;
+                var ratio = boltImage.width / boltImage.height;
+                //context.drawImage(boltImage, this.pos.x + (outerSize - boltSize), this.pos.y - (outerSize - boltSize), boltSize * ratio, boltSize);
+            }
+        }
+    }
+}
+
+    
+    
 var canvas;
 var context;
 var image = new Image();
