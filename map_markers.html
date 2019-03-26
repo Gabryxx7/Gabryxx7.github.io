@@ -113,6 +113,16 @@ function Circle() {
     }
 }
     
+    
+function Device() {
+    this.deviceType = "Phone";
+    this.deviceNumber = -1;
+    this.battery = null;
+    this.available = false;
+    this.deployed = false;
+    this.circle = null;
+}
+    
     var defaultInnerSize = 15;
 //var defaultOuterSize = defaultInnerSize * 2;
 var defaultOuterSize = defaultInnerSize * 10;
@@ -130,6 +140,7 @@ for (index in markerJson.markers) {
     if(markerJson.markers[index].hasOwnProperty("circle")){
         var circle = markerJson.markers[index].circle;
         var cir = new Circle();
+        cir.device = new Device();
         cir.pos.x = circle.x;
         cir.pos.y = circle.y;
         cir.id = markerJson.markers[index].id;
